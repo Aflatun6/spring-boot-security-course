@@ -33,7 +33,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+//                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/css/*", "/js/*", "index").permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name())
@@ -43,7 +43,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/management/api/**").hasAnyRole(ADMIN.name(), ADMINTRAINEE.name())
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+//                .httpBasic();  // Base64 username:password in HEADERS.
+                .formLogin();
     }
 
     @Override
