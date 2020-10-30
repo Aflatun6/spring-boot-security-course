@@ -21,6 +21,6 @@ public class Student {
 
     @Override
     public String toString() {
-        return String.format("%d %s", studentId, studentName);
+        return String.format("%s %s", studentId, studentName);
     }
 }
