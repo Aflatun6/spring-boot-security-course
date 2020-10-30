@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static com.example.demo.security.ApplicationUserRoles.*;
+
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,20 +28,22 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/","/css/*","/js/*","index")
-                .permitAll()
+        http
+              .csrf().disable()
+            .authorizeRequests()
+                .antMatchers("/", "/css/*", "/js/*", "index").permitAll()
+                .antMatchers("/api/**").hasRole(STUDENT.name())
                 .anyRequest().authenticated()
-            .and()
+                .and()
                 .httpBasic();
     }
 
     @Override
     @Bean
     protected UserDetailsService userDetailsService() {
-        UserDetails anna = User.builder().username("annasmith").password(passwordEncoder.encode("password")).roles(ApplicationUserRoles.STUDENT.toString()).build();
-        UserDetails linda = User.builder().username("linda").password(passwordEncoder.encode("password")).roles(ApplicationUserRoles.ADMIN.toString()).build();
-
-        return new InMemoryUserDetailsManager(anna,linda);
+        UserDetails anna = User.builder().username("anna").password(passwordEncoder.encode("password")).roles(STUDENT.name()).build(); // ROLE_STUDENT
+        UserDetails linda = User.builder().username("linda").password(passwordEncoder.encode("password")).roles(ADMIN.name()).build(); // ROLE_ADMIN
+        UserDetails tom = User.builder().username("tom").password(passwordEncoder.encode("password")).roles(ADMINTRAINEE.name()).build(); // ROLE_ADMINTRAINEE
+        return new InMemoryUserDetailsManager(anna, linda, tom);
     }
 }

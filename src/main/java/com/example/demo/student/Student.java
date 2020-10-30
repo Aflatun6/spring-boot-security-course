@@ -18,4 +18,9 @@ public class Student {
     public String getStudentName() {
         return studentName;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%d %s", studentId, studentName);
+    }
 }
